@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import PaymentModal from './PaymentModal';
 
 const posts = {
   1: {
@@ -34,7 +33,8 @@ const StyledContainer = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start; // Change this from center to flex-start
+  align-items: center; // Add this line
   background-color: #121212;
   color: #e0e0e0;
 `;
@@ -53,6 +53,9 @@ const StyledContent = styled.div`
   line-height: 1.8;
   font-size: 1.2rem;
   font-family: Georgia, serif;
+  max-height: 60vh; // Change this to a percentage of the viewport height
+  overflow-y: auto;
+  width: 100%; // Add this to ensure full width within the container
 
   p {
     margin-bottom: 1.5rem;
@@ -73,44 +76,67 @@ const StyledButton = styled.button`
   }
 `;
 
+interface NotificationProps {
+  show: boolean;
+}
+
+const StyledNotification = styled.div<NotificationProps>`
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #4fc3f7;
+  color: #121212;
+  padding: 1rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.3s ease;
+  opacity: ${props => props.show ? 1 : 0};
+  pointer-events: ${props => props.show ? 'auto' : 'none'};
+`;
+
 const PostPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [showFullContent, setShowFullContent] = useState(false);
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
 
-  const post = posts[id as keyof typeof posts];
+  const post = posts[parseInt(id as string) as keyof typeof posts];
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (contentRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = contentRef.current;
+        if (scrollTop + clientHeight >= scrollHeight - 50) {
+          setShowNotification(true);
+        }
+      }
+    };
+
+    const currentRef = contentRef.current;
+    if (currentRef) {
+      currentRef.addEventListener('scroll', handleScroll);
+    }
+
+    return () => {
+      if (currentRef) {
+        currentRef.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []);
 
   if (!post) {
     return <StyledContainer>Post not found</StyledContainer>;
   }
 
-  const handleReadMore = () => {
-    setShowPaymentModal(true);
-  };
-
-  const handlePaymentConfirm = () => {
-    setShowPaymentModal(false);
-    setShowFullContent(true);
-  };
-
   return (
     <StyledContainer>
       <StyledTitle>{post.title}</StyledTitle>
-      <StyledContent>
-        {showFullContent ? (
-          <p>{post.content}</p>
-        ) : (
-          <>
-            <p>{post.content.slice(0, 500)}...</p>
-            <StyledButton onClick={handleReadMore}>
-              Read More
-            </StyledButton>
-          </>
-        )}
+      <StyledContent ref={contentRef}>
+        <p>{post.content}</p>
       </StyledContent>
-      {showPaymentModal && (
-        <PaymentModal onConfirm={handlePaymentConfirm} onCancel={() => setShowPaymentModal(false)} />
-      )}
+      <StyledNotification show={showNotification}>
+        You've been charged 5 cents for reading this article.
+      </StyledNotification>
     </StyledContainer>
   );
 };

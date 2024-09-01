@@ -1,6 +1,9 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import LoginForm from './LoginForm';
+import BlogList from './BlogList';
+import PaymentInfo from './PaymentInfo';
+import { Link } from 'react-router-dom';
 
 const posts = [
   { id: 1, title: 'Introduction to React', excerpt: 'Learn the basics of React...' },
@@ -16,6 +19,7 @@ const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center; // Add this line
   background-color: #121212;
   color: #e0e0e0;
 `;
@@ -65,22 +69,41 @@ const StyledReadMore = styled(Link)`
 `;
 
 const HomePage: React.FC = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const handleLogin = (email: string) => {
+    setIsProcessing(true);
+    // Simulate login process
+    setTimeout(() => {
+      setIsLoggedIn(true);
+      setIsProcessing(false);
+    }, 2000);
+  };
+
   return (
     <StyledContainer>
       <StyledTitle>My Tech Blog</StyledTitle>
-      <StyledPostList>
-        {posts.map((post) => (
-          <StyledPostItem key={post.id}>
-            <StyledPostTitle>{post.title}</StyledPostTitle>
-            <StyledPostExcerpt>{post.excerpt}</StyledPostExcerpt>
-            <StyledReadMore to={`/post/${post.id}`}>
-              Read More
-            </StyledReadMore>
-          </StyledPostItem>
-        ))}
-      </StyledPostList>
+      {!isLoggedIn ? (
+        <>
+          <LoginForm onLogin={handleLogin} />
+          <PaymentInfo />
+        </>
+      ) : isProcessing ? (
+        <ProcessingMessage />
+      ) : (
+        <BlogList />
+      )}
     </StyledContainer>
   );
 };
 
+const ProcessingMessage: React.FC = () => (
+  <div>
+    <p>Login successful! Generating session key...</p>
+    <p>Transaction fee is being charged...</p>
+  </div>
+);
+
 export default HomePage;
+export { StyledPostList, StyledPostItem, StyledPostTitle, StyledPostExcerpt, StyledReadMore };
