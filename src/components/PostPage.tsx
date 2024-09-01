@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -164,13 +164,12 @@ const posts = {
 };
 
 const StyledContainer = styled.div`
-  max-width: 700px;
+  max-width: 800px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 3rem 1.5rem;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: center;
   background-color: #121212;
   color: #e0e0e0;
@@ -180,66 +179,83 @@ const StyledTitle = styled.h1`
   color: #ffffff;
   font-size: 2.5rem;
   font-weight: 700;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   line-height: 1.2;
   text-align: center;
+  border-bottom: 2px solid #666666;
+  padding-bottom: 1rem;
 `;
 
 const StyledContent = styled.div`
   color: #e0e0e0;
   line-height: 1.8;
-  font-size: 1.2rem;
-  font-family: Georgia, serif;
-  max-height: 60%;
-  overflow-y: auto;
+  font-size: 1.1rem;
+  font-family: 'Arial', sans-serif;
   width: 100%;
 
   p {
     margin-bottom: 1.5rem;
   }
+
+  h2 {
+    color: #ffffff;
+    font-size: 1.8rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid #666666;
+    padding-left: 1rem;
+  }
+
+  ul, ol {
+    margin-bottom: 1.5rem;
+    padding-left: 2rem;
+  }
+
+  li {
+    margin-bottom: 0.5rem;
+  }
+
+  strong {
+    color: #ffffff;
+    font-weight: 600;
+  }
 `;
 
 const StyledNotification = styled.div<{ show: boolean }>`
   position: fixed;
-  top: 20px;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #4fc3f7;
-  color: #121212;
-  padding: 1rem;
-  border-radius: 4px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  transition: opacity 0.3s ease;
+  background-color: #333333;
+  color: #ffffff;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: opacity 0.3s ease, transform 0.3s ease;
   opacity: ${props => props.show ? 1 : 0};
+  transform: ${props => props.show ? 'translate(-50%, 0)' : 'translate(-50%, 20px)'};
   pointer-events: ${props => props.show ? 'auto' : 'none'};
+  font-weight: 500;
 `;
 
 const PostPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [showNotification, setShowNotification] = useState(false);
-  const contentRef = useRef<HTMLDivElement>(null);
 
   const post = posts[parseInt(id as string) as keyof typeof posts];
 
   useEffect(() => {
     const handleScroll = () => {
-      if (contentRef.current) {
-        const { scrollTop, scrollHeight, clientHeight } = contentRef.current;
-        if (scrollTop + clientHeight >= scrollHeight - 50) {
-          setShowNotification(true);
-        }
+      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200) {
+        setShowNotification(true);
+        window.removeEventListener('scroll', handleScroll);
       }
     };
 
-    const currentRef = contentRef.current;
-    if (currentRef) {
-      currentRef.addEventListener('scroll', handleScroll);
-    }
+    window.addEventListener('scroll', handleScroll);
 
     return () => {
-      if (currentRef) {
-        currentRef.removeEventListener('scroll', handleScroll);
-      }
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
@@ -250,14 +266,25 @@ const PostPage: React.FC = () => {
   return (
     <StyledContainer>
       <StyledTitle>{post.title}</StyledTitle>
-      <StyledContent ref={contentRef}>
-        <p>{post.content}</p>
-      </StyledContent>
+      <StyledContent dangerouslySetInnerHTML={{ __html: formatContent(post.content) }} />
       <StyledNotification show={showNotification}>
         You've been charged 5 cents for reading this article.
       </StyledNotification>
     </StyledContainer>
   );
+};
+
+// Helper function to format the content
+const formatContent = (content: string) => {
+  return content
+    .replace(/\n\s*\n/g, '</p><p>') // Convert double newlines to paragraphs
+    .replace(/^(.+)$/gm, '<p>$1</p>') // Wrap single lines in paragraphs
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') // Convert **text** to <strong>
+    .replace(/\n\s*(\d+\.|\*)\s/g, '<li>') // Convert numbered lists and bullet points to list items
+    .replace(/<li>(.+)(?=\n<li>|\n\n|$)/g, '<li>$1</li>') // Close list items
+    .replace(/<li>/g, '<ul><li>') // Open unordered list before first item
+    .replace(/<\/li>\n(?!<li>)/g, '</li></ul>') // Close unordered list after last item
+    .replace(/\n\s*(.+?):/g, '<h2>$1</h2>'); // Convert lines ending with colon to h2
 };
 
 export default PostPage;
