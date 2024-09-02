@@ -4,12 +4,6 @@ import LoginForm from './LoginForm';
 import BlogList from './BlogList';
 import { Link } from 'react-router-dom';
 
-const posts = [
-  { id: 1, title: 'Introduction to React', excerpt: 'Learn the basics of React...' },
-  { id: 2, title: 'Advanced JavaScript Techniques', excerpt: 'Explore advanced JS concepts...' },
-  { id: 3, title: 'CSS Grid vs Flexbox', excerpt: 'Comparing layout techniques...' },
-];
-
 const StyledContainer = styled.div`
   width: 100%;
   min-height: 100vh;

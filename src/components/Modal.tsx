@@ -37,11 +37,6 @@ const ModalText = styled.p`
   margin-bottom: 1rem;
 `;
 
-const ModalWarning = styled(ModalText)`
-  color: #e74c3c;
-  font-weight: 600;
-`;
-
 const ModalInfo = styled(ModalText)`
   background: #e8f4fd;
   padding: 0.75rem;
