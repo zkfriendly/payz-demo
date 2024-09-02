@@ -62,6 +62,7 @@ const NotificationMessage = styled.div<{ show: boolean }>`
 
 interface NavBarProps {
   showNotification: boolean;
+  email: string; // Add this line to include the email property
 }
 
 const NavBar: React.FC<NavBarProps> = ({ showNotification }) => {
