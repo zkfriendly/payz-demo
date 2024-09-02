@@ -103,7 +103,7 @@ const HomePage: React.FC = () => {
 
   return (
     <>
-      <NavBar email={userEmail} />
+      <NavBar email={userEmail} showNotification={false} />
       <StyledContainer>
         <StyledContent>
           <StyledTitle>Micropayments Email Wallet</StyledTitle>
