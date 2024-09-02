@@ -113,12 +113,12 @@ const HomePage: React.FC = () => {
     // Simulate login process
     setIsLoggedIn(true);
     setIsProcessing(false);
-    };
+  };
 
   return (
     <StyledContainer>
       <StyledContent>
-        <StyledTitle>My Tech Blog</StyledTitle>
+        <StyledTitle>Micropayments Email Wallet</StyledTitle>
         {!isLoggedIn ? (
           <>
             <StyledIntro>
