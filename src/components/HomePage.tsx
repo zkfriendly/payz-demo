@@ -135,10 +135,7 @@ const HomePage: React.FC = () => {
           ) : isProcessing ? (
             <ProcessingMessage />
           ) : (
-            <>
-              <StyledNotification>Connected with: {userEmail}</StyledNotification>
-              <BlogList />
-            </>
+            <BlogList />
           )}
         </StyledContent>
       </StyledContainer>
@@ -147,10 +144,10 @@ const HomePage: React.FC = () => {
 };
 
 const ProcessingMessage: React.FC = () => (
-  <StyledNotification>
+  <div>
     <p>Login successful! Generating session key...</p>
     <p>Transaction fee is being charged...</p>
-  </StyledNotification>
+  </div>
 );
 
 export default HomePage;
