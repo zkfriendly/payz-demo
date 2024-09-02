@@ -54,17 +54,7 @@ const StyledIntroParagraph = styled.p`
 const StyledHighlight = styled.span`
   font-weight: bold;
   color: #4fc3f7;
-`;
-
-const StyledNotification = styled.div`
-  background-color: #4fc3f7;
-  color: #121212;
-  padding: 1rem;
-  border-radius: 4px;
-  margin-top: 1rem;
-  text-align: center;
-  font-weight: 500;
-`;
+`;  
 
 const StyledPostList = styled.ul`
   list-style: none;

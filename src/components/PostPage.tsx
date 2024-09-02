@@ -243,7 +243,7 @@ const PostPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [showFullContent, setShowFullContent] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
-  const [userEmail, setUserEmail] = useState(localStorage.getItem('connectedEmail') || '');
+  const userEmail = localStorage.getItem('connectedEmail') || '';
 
   const post = posts[parseInt(id as string) as keyof typeof posts];
 

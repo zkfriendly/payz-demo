@@ -62,7 +62,7 @@ const NotificationMessage = styled.div<{ show: boolean }>`
 `;
 
 interface NavBarProps {
-  email?: string;
+  email: string;
   showNotification: boolean;
 }
 
