@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import { FaListAlt } from 'react-icons/fa';
 
 const StyledNavBar = styled.nav`
   width: 100%;
@@ -75,7 +74,6 @@ const NavBar: React.FC<NavBarProps> = ({ email, showNotification }) => {
       <StyledMenu>
         {location.pathname === '/post' && (
           <StyledMenuItem to="/posts">
-            <FaListAlt />
             Posts List
           </StyledMenuItem>
         )}
@@ -83,7 +81,7 @@ const NavBar: React.FC<NavBarProps> = ({ email, showNotification }) => {
           Email Wallet: You've been charged 5 cents for reading this article.
         </NotificationMessage>
       </StyledMenu>
-      {email && <StyledEmail>Connected: {email}</StyledEmail>}
+      {<StyledEmail>Connected: sample@example.com</StyledEmail>}
     </StyledNavBar>
   );
 };
