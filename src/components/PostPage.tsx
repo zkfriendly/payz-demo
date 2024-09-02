@@ -222,21 +222,6 @@ const StyledContent = styled.div`
   }
 `;
 
-const PopupNotification = styled.div<{ show: boolean }>`
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background-color: #4fc3f7;
-  color: #121212;
-  padding: 1rem 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  opacity: ${props => props.show ? 1 : 0};
-  transform: ${props => props.show ? 'translateY(0)' : 'translateY(-20px)'};
-  z-index: 1000;
-`;
-
 const StyledReadMoreButton = styled.button`
   background-color: #4fc3f7;
   color: #121212;
@@ -266,7 +251,7 @@ const PostPage: React.FC = () => {
     if (showNotification) {
       const timer = setTimeout(() => {
         setShowNotification(false);
-      }, 3000); // Hide notification after 3 seconds
+      }, 5000); // Hide notification after 5 seconds
 
       return () => clearTimeout(timer);
     }
@@ -285,7 +270,7 @@ const PostPage: React.FC = () => {
 
   return (
     <>
-      <NavBar email={userEmail} />
+      <NavBar email={userEmail} showNotification={showNotification} />
       <StyledContainer>
         <StyledTitle>{post.title}</StyledTitle>
         <StyledContent>
@@ -300,9 +285,6 @@ const PostPage: React.FC = () => {
             </>
           )}
         </StyledContent>
-        <PopupNotification show={showNotification}>
-          Email Wallet: You've been charged 5 cents for reading this article.
-        </PopupNotification>
       </StyledContainer>
     </>
   );

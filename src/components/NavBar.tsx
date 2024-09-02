@@ -23,6 +23,8 @@ const StyledLogo = styled(Link)`
 const StyledMenu = styled.div`
   display: flex;
   align-items: center;
+  flex-grow: 1;
+  justify-content: center;
 `;
 
 const StyledMenuItem = styled(Link)`
@@ -47,14 +49,24 @@ const StyledEmail = styled.div`
   color: #e0e0e0;
   font-size: 1.1rem;
   font-weight: 500;
+  margin-left: auto;
+`;
+
+const NotificationMessage = styled.div<{ show: boolean }>`
+  color: #4fc3f7;
+  font-size: 1.1rem;
+  font-weight: 500;
   margin-left: 2rem;
+  opacity: ${props => props.show ? 1 : 0};
+  transition: opacity 0.3s ease;
 `;
 
 interface NavBarProps {
   email?: string;
+  showNotification: boolean;
 }
 
-const NavBar: React.FC<NavBarProps> = ({ email }) => {
+const NavBar: React.FC<NavBarProps> = ({ email, showNotification }) => {
   const location = useLocation();
 
   return (
@@ -67,8 +79,11 @@ const NavBar: React.FC<NavBarProps> = ({ email }) => {
             Posts List
           </StyledMenuItem>
         )}
-        {email && <StyledEmail>Connected: {email}</StyledEmail>}
+        <NotificationMessage show={showNotification}>
+          Email Wallet: You've been charged 5 cents for reading this article.
+        </NotificationMessage>
       </StyledMenu>
+      {email && <StyledEmail>Connected: {email}</StyledEmail>}
     </StyledNavBar>
   );
 };
