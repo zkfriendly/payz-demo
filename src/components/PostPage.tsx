@@ -221,55 +221,95 @@ const StyledContent = styled.div`
   }
 `;
 
-const StyledNotification = styled.div<{ show: boolean }>`
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
+const StyledNotification = styled.div`
   background-color: #333333;
   color: #ffffff;
   padding: 1rem 1.5rem;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  margin-top: 2rem;
+  font-weight: 500;
+  text-align: center;
+`;
+
+const StyledReadMoreButton = styled.button`
+  background-color: #4fc3f7;
+  color: #121212;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin-top: 2rem;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #03a9f4;
+  }
+`;
+
+const PopupNotification = styled.div<{ show: boolean }>`
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #4fc3f7;
+  color: #121212;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   transition: opacity 0.3s ease, transform 0.3s ease;
   opacity: ${props => props.show ? 1 : 0};
-  transform: ${props => props.show ? 'translate(-50%, 0)' : 'translate(-50%, 20px)'};
-  pointer-events: ${props => props.show ? 'auto' : 'none'};
-  font-weight: 500;
+  transform: ${props => props.show ? 'translateY(0)' : 'translateY(-20px)'};
+  z-index: 1000;
 `;
 
 const PostPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const [showFullContent, setShowFullContent] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
 
   const post = posts[parseInt(id as string) as keyof typeof posts];
 
   useEffect(() => {
-    const handleScroll = () => {
-      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200) {
-        setShowNotification(true);
-        window.removeEventListener('scroll', handleScroll);
-      }
-    };
+    if (showNotification) {
+      const timer = setTimeout(() => {
+        setShowNotification(false);
+      }, 3000); // Hide notification after 3 seconds
 
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+      return () => clearTimeout(timer);
+    }
+  }, [showNotification]);
 
   if (!post) {
     return <StyledContainer>Post not found</StyledContainer>;
   }
 
+  const handleReadMore = () => {
+    setShowFullContent(true);
+    setShowNotification(true);
+  };
+
+  const contentPreview = post.content.split(' ').slice(0, 50).join(' ') + '...';
+
   return (
     <StyledContainer>
       <StyledTitle>{post.title}</StyledTitle>
-      <StyledContent dangerouslySetInnerHTML={{ __html: formatContent(post.content) }} />
-      <StyledNotification show={showNotification}>
-        You've been charged 5 cents for reading this article.
-      </StyledNotification>
+      <StyledContent>
+        {showFullContent ? (
+          <div dangerouslySetInnerHTML={{ __html: formatContent(post.content) }} />
+        ) : (
+          <>
+            <div dangerouslySetInnerHTML={{ __html: formatContent(contentPreview) }} />
+            <StyledReadMoreButton onClick={handleReadMore}>
+              Read More
+            </StyledReadMoreButton>
+          </>
+        )}
+      </StyledContent>
+      <PopupNotification show={showNotification}>
+        Email Wallet: You've been charged 5 cents for reading this article.
+      </PopupNotification>
     </StyledContainer>
   );
 };

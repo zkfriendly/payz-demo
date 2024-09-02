@@ -111,15 +111,15 @@ const StyledReadMore = styled(Link)`
 const HomePage: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
 
   const handleLogin = (email: string) => {
     setIsProcessing(true);
+    setUserEmail(email);
     // Simulate login process
-    setTimeout(() => {
-      setIsLoggedIn(true);
-      setIsProcessing(false);
-    }, 2000);
-  };
+    setIsLoggedIn(true);
+    setIsProcessing(false);
+    };
 
   return (
     <StyledContainer>
@@ -144,7 +144,10 @@ const HomePage: React.FC = () => {
         ) : isProcessing ? (
           <ProcessingMessage />
         ) : (
-          <BlogList />
+          <>
+            <StyledNotification>Connected with: {userEmail}</StyledNotification>
+            <BlogList />
+          </>
         )}
       </StyledContent>
     </StyledContainer>
