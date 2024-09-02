@@ -61,11 +61,10 @@ const NotificationMessage = styled.div<{ show: boolean }>`
 `;
 
 interface NavBarProps {
-  email: string;
   showNotification: boolean;
 }
 
-const NavBar: React.FC<NavBarProps> = ({ email, showNotification }) => {
+const NavBar: React.FC<NavBarProps> = ({ showNotification }) => {
   const location = useLocation();
 
   return (
