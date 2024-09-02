@@ -13,10 +13,11 @@ const StyledNavBar = styled.nav`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
-const StyledLogo = styled.div`
+const StyledLogo = styled(Link)`
   color: #4fc3f7;
   font-size: 1.5rem;
   font-weight: 700;
+  text-decoration: none;
 `;
 
 const StyledMenu = styled.div`
@@ -58,7 +59,7 @@ const NavBar: React.FC<NavBarProps> = ({ email }) => {
 
   return (
     <StyledNavBar>
-      <StyledLogo>Micropayments Email Wallet</StyledLogo>
+      <StyledLogo to="/">Micropayments Email Wallet</StyledLogo>
       <StyledMenu>
         {location.pathname === '/post' && (
           <StyledMenuItem to="/posts">
