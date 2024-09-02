@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import NavBar from './NavBar';
 
 const posts = {
   1: {
@@ -221,6 +222,21 @@ const StyledContent = styled.div`
   }
 `;
 
+const PopupNotification = styled.div<{ show: boolean }>`
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #4fc3f7;
+  color: #121212;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: ${props => props.show ? 1 : 0};
+  transform: ${props => props.show ? 'translateY(0)' : 'translateY(-20px)'};
+  z-index: 1000;
+`;
+
 const StyledReadMoreButton = styled.button`
   background-color: #4fc3f7;
   color: #121212;
@@ -238,25 +254,11 @@ const StyledReadMoreButton = styled.button`
   }
 `;
 
-const PopupNotification = styled.div<{ show: boolean }>`
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background-color: #4fc3f7;
-  color: #121212;
-  padding: 1rem 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  opacity: ${props => props.show ? 1 : 0};
-  transform: ${props => props.show ? 'translateY(0)' : 'translateY(-20px)'};
-  z-index: 1000;
-`;
-
 const PostPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [showFullContent, setShowFullContent] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
+  const [userEmail, setUserEmail] = useState(localStorage.getItem('connectedEmail') || '');
 
   const post = posts[parseInt(id as string) as keyof typeof posts];
 
@@ -282,24 +284,27 @@ const PostPage: React.FC = () => {
   const contentPreview = post.content.split(' ').slice(0, 50).join(' ') + '...';
 
   return (
-    <StyledContainer>
-      <StyledTitle>{post.title}</StyledTitle>
-      <StyledContent>
-        {showFullContent ? (
-          <div dangerouslySetInnerHTML={{ __html: formatContent(post.content) }} />
-        ) : (
-          <>
-            <div dangerouslySetInnerHTML={{ __html: formatContent(contentPreview) }} />
-            <StyledReadMoreButton onClick={handleReadMore}>
-              Read More
-            </StyledReadMoreButton>
-          </>
-        )}
-      </StyledContent>
-      <PopupNotification show={showNotification}>
-        Email Wallet: You've been charged 5 cents for reading this article.
-      </PopupNotification>
-    </StyledContainer>
+    <>
+      <NavBar email={userEmail} />
+      <StyledContainer>
+        <StyledTitle>{post.title}</StyledTitle>
+        <StyledContent>
+          {showFullContent ? (
+            <div dangerouslySetInnerHTML={{ __html: formatContent(post.content) }} />
+          ) : (
+            <>
+              <div dangerouslySetInnerHTML={{ __html: formatContent(contentPreview) }} />
+              <StyledReadMoreButton onClick={handleReadMore}>
+                Read More
+              </StyledReadMoreButton>
+            </>
+          )}
+        </StyledContent>
+        <PopupNotification show={showNotification}>
+          Email Wallet: You've been charged 5 cents for reading this article.
+        </PopupNotification>
+      </StyledContainer>
+    </>
   );
 };
 

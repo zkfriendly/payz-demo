@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import LoginForm from './LoginForm';
 import BlogList from './BlogList';
-import { Link } from 'react-router-dom';
+import NavBar from './NavBar';
 
 const StyledContainer = styled.div`
   width: 100%;
@@ -66,37 +66,32 @@ const StyledNotification = styled.div`
   font-weight: 500;
 `;
 
-const StyledPostList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+const StyledPostList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
 `;
 
-const StyledPostItem = styled.div`
-  border-bottom: 1px solid #333333;
-  padding-bottom: 2rem;
+const StyledPostItem = styled.li`
+  margin-bottom: 1.5rem;
 `;
 
-const StyledPostTitle = styled.h2`
+const StyledPostTitle = styled.h3`
   color: #ffffff;
-  font-size: 1.8rem;
-  font-weight: 700;
+  font-size: 1.5rem;
   margin-bottom: 0.5rem;
 `;
 
 const StyledPostExcerpt = styled.p`
-  color: #b0b0b0;
-  font-size: 1.1rem;
-  line-height: 1.6;
-  margin-bottom: 1rem;
+  color: #e0e0e0;
+  font-size: 1rem;
+  line-height: 1.5;
 `;
 
-const StyledReadMore = styled(Link)`
+const StyledReadMore = styled.a`
   color: #4fc3f7;
+  font-weight: bold;
   text-decoration: none;
-  font-size: 1rem;
-  font-weight: 500;
-
   &:hover {
     text-decoration: underline;
   }
@@ -116,35 +111,38 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <StyledContainer>
-      <StyledContent>
-        <StyledTitle>Micropayments Email Wallet</StyledTitle>
-        {!isLoggedIn ? (
-          <>
-            <StyledIntro>
-              <StyledIntroTitle>Welcome to Our Tech Blog!</StyledIntroTitle>
-              <StyledIntroParagraph>
-                Dive into a world of cutting-edge technology insights and expert knowledge. Our blog offers in-depth articles on React, JavaScript, CSS, and more, curated just for you.
-              </StyledIntroParagraph>
-              <StyledIntroParagraph>
-                We use a <StyledHighlight>convenient pay-as-you-go model</StyledHighlight>, so you only pay for the articles you read. No subscriptions, no hidden fees! Simply connect with your email to get started.
-              </StyledIntroParagraph>
-              <StyledIntroParagraph>
-                <StyledHighlight>How it works:</StyledHighlight> Each article costs just 5 cents. You'll be charged automatically when you reach the end of an article. It's that simple!
-              </StyledIntroParagraph>
-            </StyledIntro>
-            <LoginForm onLogin={handleLogin} />
-          </>
-        ) : isProcessing ? (
-          <ProcessingMessage />
-        ) : (
-          <>
-            <StyledNotification>Connected with: {userEmail}</StyledNotification>
-            <BlogList />
-          </>
-        )}
-      </StyledContent>
-    </StyledContainer>
+    <>
+      <NavBar email={userEmail} />
+      <StyledContainer>
+        <StyledContent>
+          <StyledTitle>Micropayments Email Wallet</StyledTitle>
+          {!isLoggedIn ? (
+            <>
+              <StyledIntro>
+                <StyledIntroTitle>Welcome to Our Tech Blog!</StyledIntroTitle>
+                <StyledIntroParagraph>
+                  Dive into a world of cutting-edge technology insights and expert knowledge. Our blog offers in-depth articles on React, JavaScript, CSS, and more, curated just for you.
+                </StyledIntroParagraph>
+                <StyledIntroParagraph>
+                  We use a <StyledHighlight>convenient pay-as-you-go model</StyledHighlight>, so you only pay for the articles you read. No subscriptions, no hidden fees! Simply connect with your email to get started.
+                </StyledIntroParagraph>
+                <StyledIntroParagraph>
+                  <StyledHighlight>How it works:</StyledHighlight> Each article costs just 5 cents. You'll be charged automatically when you reach the end of an article. It's that simple!
+                </StyledIntroParagraph>
+              </StyledIntro>
+              <LoginForm onLogin={handleLogin} />
+            </>
+          ) : isProcessing ? (
+            <ProcessingMessage />
+          ) : (
+            <>
+              <StyledNotification>Connected with: {userEmail}</StyledNotification>
+              <BlogList />
+            </>
+          )}
+        </StyledContent>
+      </StyledContainer>
+    </>
   );
 };
 
