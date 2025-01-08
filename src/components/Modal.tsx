@@ -81,18 +81,6 @@ const ModalEmail = styled.div`
   }
 `;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 1.5rem;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-`;
-
 const ModalButton = styled.button`
   background-color: #2ecc71;
   color: white;
