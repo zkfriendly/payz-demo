@@ -19,8 +19,14 @@ const ModalContent = styled.div`
   border-radius: 12px;
   text-align: left;
   color: #333;
-  width: 450px;
+  width: 90%;
+  max-width: 450px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+    width: 95%;
+  }
 `;
 
 const ModalTitle = styled.h2`
@@ -28,6 +34,11 @@ const ModalTitle = styled.h2`
   font-size: 2rem;
   margin-bottom: 1.5rem;
   font-weight: 700;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
 `;
 
 const ModalText = styled.p`
@@ -35,6 +46,11 @@ const ModalText = styled.p`
   font-size: 1rem;
   line-height: 1.6;
   margin-bottom: 1rem;
+
+  @media (max-width: 768px) {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
 `;
 
 const ModalInfo = styled(ModalText)`
@@ -42,6 +58,10 @@ const ModalInfo = styled(ModalText)`
   padding: 0.75rem;
   border-radius: 6px;
   border-left: 4px solid #3498db;
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const ModalEmail = styled.div`
@@ -53,6 +73,24 @@ const ModalEmail = styled.div`
   background: #f1f8e9;
   border-radius: 6px;
   border: 1px solid #7cb342;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    padding: 0.5rem;
+    margin: 1rem 0;
+  }
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 `;
 
 const ModalButton = styled.button`
@@ -65,7 +103,7 @@ const ModalButton = styled.button`
   font-weight: 600;
   font-size: 1rem;
   transition: background-color 0.3s, transform 0.1s;
-  margin-top: 1.5rem;
+  width: auto;
 
   &:hover {
     background-color: #27ae60;
@@ -74,11 +112,15 @@ const ModalButton = styled.button`
   &:active {
     transform: translateY(1px);
   }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 0.7rem 1rem;
+  }
 `;
 
 const ModalCancelButton = styled(ModalButton)`
   background-color: #e74c3c;
-  margin-left: 1rem;
 
   &:hover {
     background-color: #c0392b;
